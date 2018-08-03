@@ -5,7 +5,7 @@
 
     <groupId>org.vaadin.stefan</groupId>
     <artifactId>dnd</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>HTML5 Drag and Drop Extension</name>
     <description>Java based integration of HTML5 drag and drop functionality for Vaadin 10 components</description>
 
