@@ -19,6 +19,7 @@ import org.vaadin.stefan.dnd.drop.DropTargetExtension;
  * The main view contains a button and a template element.
  */
 @Route("")
+@HtmlImport("frontend://styles/shared-styles.html")
 public class DragAndDropView extends VerticalLayout {
 	public DragAndDropView() {
 		TestComponent d1 = new TestComponent(1);
