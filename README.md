@@ -31,9 +31,16 @@ dropTargetExtension.addDragLeaveListener(event -> System.out.println(event.getCo
 dropTargetExtension.addDropListener(event -> System.out.println(event.getComponent() + " drops on " + dropTargetExtension));
 ```
 
+## Styling
+
+Dragged elements css classes are extended with a `dragged` class name, that can be used for styling the source element, when the dragging start. Also there will be a element tag specific class like `div-dragged` if the draggable is a Div element.
+These classes are removed as soon, as the dragging stops.
+
+For the drop target there will be the permanent classes `droptarget` and element-tagname + `-droptarget` (like `droptarget div-droptarget`). As soon as a dragged element enters the drop area, the classes `dragover` and element-tag + `-dragover` will be added to the drop target.
+
+Other class names might be added by yourself as needed.
+
 ## Todos
 
-- adding styles to dragged elements and possible drop targets
 - extending events to provide additional client side information like Mouse events, drop target, etc.
 - disableing dragging, when click and hold a inner component of the draggable component (e.g.so that you might still mark text)
-- adding javadocs
