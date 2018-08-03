@@ -19,7 +19,7 @@ import org.vaadin.stefan.dnd.drop.DropTargetExtension;
  * The main view contains a button and a template element.
  */
 @Route("")
-public class DragAndDropView extends VerticalLayout implements AfterNavigationObserver {
+public class DragAndDropView extends VerticalLayout {
 	public DragAndDropView() {
 		TestComponent d1 = new TestComponent(1);
 		DragSourceExtension<TestComponent> extend1 = DragSourceExtension.extend(d1);
@@ -51,35 +51,6 @@ public class DragAndDropView extends VerticalLayout implements AfterNavigationOb
 			add(new Button("World", event -> Notification.show("CLICK")));
 			add(new TextField("Its me, " + i));
 		}
-	}
-
-//	public void createDragSourceExtension(Component component) {
-//		if (!component.getId().isPresent()) {
-//			component.setId(UUID.randomUUID().toString());
-//		}
-//		component.getElement().setProperty("draggable", true);
-//		component.getElement().getNode().runWhenAttached(ui -> {
-//			Page page = ui.getPage();
-//			page.executeJavaScript("$0.addEventListener('dragstart', e => e.dataTransfer.setData(\"data\", e.target.id))", component);
-//		});
-////		component.getElement().callFunction("addEventListener('dragstart', e => e.dataTransfer.setData('data', e.target.id))");
-//	}
-//
-//	public void createDropTargetExtension(Component component) {
-//		component.getElement().getNode().runWhenAttached(ui -> {
-//			Page page = ui.getPage();
-//			page.executeJavaScript("$0.addEventListener('dragover', e => e.preventDefault())", component);
-//			page.executeJavaScript("$0.addEventListener('drop', e => {e.preventDefault(); e.target.appendChild(document.getElementById(e.dataTransfer.getData('data')))})", component);
-//		});
-//	}
-
-	@Override
-	public void afterNavigation(AfterNavigationEvent ane) {
-////		createDragSourceExtension(dragMe);
-////		createDragSourceExtension(dragMe2);
-////		createDragSourceExtension(dragMe3);
-////		createDragSourceExtension(dragMe4);
-//		createDropTargetExtension(dropHere);
 	}
 
 }
