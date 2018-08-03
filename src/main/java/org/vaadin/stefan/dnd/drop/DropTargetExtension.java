@@ -16,6 +16,7 @@ import java.util.Optional;
  * @param <T> component type
  */
 public class DropTargetExtension<T extends Component> {
+	private final T component;
 	private LinkedHashSet<DropListener<T>> dropListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragEnterListener<T>> dragEnterListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragOverListener<T>> dragOverListeners = new LinkedHashSet<>();
@@ -29,7 +30,15 @@ public class DropTargetExtension<T extends Component> {
 	 * @param component component
 	 */
 	public DropTargetExtension(T component) {
+		this.component = component;
+
 		Element element = component.getElement();
+		String property = element.getAttribute("class");
+		if (property != null) {
+			element.setAttribute("class", property + " droptarget");
+		} else {
+			element.setAttribute("class", "droptarget");
+		}
 
 		element.getNode().runWhenAttached(ui -> {
 			Page page = ui.getPage();
@@ -43,6 +52,7 @@ public class DropTargetExtension<T extends Component> {
 		element.addEventListener("dragenter", x -> dragEnterListeners.forEach(l -> l.onDragEnter(new DragEnterEvent<>(component))));
 		element.addEventListener("dragover", x -> dragOverListeners.forEach(l -> l.onDragOver(new DragOverEvent<>(component))));
 		element.addEventListener("dragleave", x -> dragLeaveListeners.forEach(l -> l.onDragLeave(new DragLeaveEvent<>(component))));
+
 	}
 
 	/**
@@ -63,7 +73,14 @@ public class DropTargetExtension<T extends Component> {
 	 * @return client side event listener for "drop"
 	 */
 	protected Optional<String> createClientSideDropEventListener() {
-		return Optional.of("e => {e.preventDefault(); e.target.appendChild(document.getElementById(e.dataTransfer.getData('text/plain')))}");
+		return Optional.of("e => {" +
+				"if(e.target.classList.contains('droptarget')) {" +
+				"   e.preventDefault(); " +
+				"   e.target.classList.remove('" + String.join("','", createDragOverTargetStyleNames()) + "');" +
+				"   var draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));" +
+				"   e.target.appendChild(draggedElement);" +
+				"   }" +
+				"}");
 	}
 
 	/**
@@ -72,7 +89,11 @@ public class DropTargetExtension<T extends Component> {
 	 * @return client side event listener for "dragover"
 	 */
 	protected Optional<String> createClientSideDragOverEventListener() {
-		return Optional.of("e => e.preventDefault()");
+		return Optional.of("e => {" +
+				"if(e.target.classList.contains('droptarget')) {" +
+				"       e.preventDefault();" +
+				"   }" +
+				"}");
 	}
 
 	/**
@@ -81,7 +102,11 @@ public class DropTargetExtension<T extends Component> {
 	 * @return client side event listener for "dragenter"
 	 */
 	protected Optional<String> createClientSideDragEnterEventListener() {
-		return Optional.empty();
+		return Optional.of("e => {" +
+				"if(e.target.classList.contains('droptarget')) {" +
+				"e.target.classList.add('" + String.join("','", createDragOverTargetStyleNames()) + "');" +
+				"}" +
+				"}");
 	}
 
 	/**
@@ -90,12 +115,17 @@ public class DropTargetExtension<T extends Component> {
 	 * @return client side event listener for "dragleave"
 	 */
 	protected Optional<String> createClientSideDragLeaveEventListener() {
-		return Optional.empty();
+		return Optional.of("e => {" +
+				"if(e.target.classList.contains('droptarget')) {" +
+				"e.target.classList.remove('" + String.join("','", createDragOverTargetStyleNames()) + "');" +
+				"}" +
+				"}");
 	}
 
 	/**
 	 * Registers a server side listener that will be informed, whan a draggable will be dropped inside
 	 * this component.
+	 *
 	 * @param listener listener
 	 * @return registration instance to remove the listener
 	 */
@@ -106,6 +136,7 @@ public class DropTargetExtension<T extends Component> {
 
 	/**
 	 * Registers a server side listener that will be informed, when a draggable is moved over the drop area.
+	 *
 	 * @param listener listener
 	 * @return registration instance to remove the listener
 	 */
@@ -116,6 +147,7 @@ public class DropTargetExtension<T extends Component> {
 
 	/**
 	 * Registers a server side listener that will be informed, when a dragged component is moved into the drop area.
+	 *
 	 * @param listener listener
 	 * @return registration instance to remove the listener
 	 */
@@ -126,11 +158,20 @@ public class DropTargetExtension<T extends Component> {
 
 	/**
 	 * Registers a server side listener that will be informed, when a dragged component is moved out of the drop area.
+	 *
 	 * @param listener listener
 	 * @return registration instance to remove the listener
 	 */
 	public Registration addDragLeaveListener(DragLeaveListener<T> listener) {
 		dragLeaveListeners.add(listener);
 		return () -> dragLeaveListeners.remove(listener);
+	}
+
+	protected String[] createDragOverTargetStyleNames() {
+		return new String[]{"dragover", getComponent().getElement().getTag() + "-dragover", getComponent().getId() + "-dragover"};
+	}
+
+	public T getComponent() {
+		return component;
 	}
 }
