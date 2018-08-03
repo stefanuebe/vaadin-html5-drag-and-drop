@@ -20,7 +20,13 @@ public class DragSourceExtension<T extends Component> {
 		component.getElement().setProperty("draggable", true);
 		component.getElement().getNode().runWhenAttached(ui -> {
 			Page page = ui.getPage();
-			page.executeJavaScript("$0.addEventListener('dragstart', e => e.dataTransfer.setData(\"data\", e.target.id))", component);
+			page.executeJavaScript("$0.addEventListener('dragstart', e => {" +
+					"e.dataTransfer.effectAllowed = 'move';" +
+					"e.dataTransfer.setData('text/plain', e.target.id);" +
+					"})", component);
+			page.executeJavaScript("$0.addEventListener('dragend', e => {" +
+					"e.dataTransfer.setData('text/plain', null);" +
+					"})", component);
 		});
 
 		component.getElement().addEventListener("dragstart", x -> dragStartListeners.forEach(l -> l.onDragStart(new DragStartEvent<>(component))));
