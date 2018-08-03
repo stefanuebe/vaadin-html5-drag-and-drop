@@ -68,7 +68,7 @@ public class DragSourceExtension<T extends Component> {
 	}
 
 	protected String[] createDraggedStyleNames() {
-		return new String[]{"dragged", getComponent().getElement().getTag() + "-dragged", getComponent().getId() + "-dragged"};
+		return new String[]{"dragged", getComponent().getElement().getTag() + "-dragged"};
 	}
 
 

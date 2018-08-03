@@ -34,10 +34,11 @@ public class DropTargetExtension<T extends Component> {
 
 		Element element = component.getElement();
 		String property = element.getAttribute("class");
+		String dropTargetStyles = String.join(" ", createDragOverStyleNames());
 		if (property != null) {
-			element.setAttribute("class", property + " droptarget");
+			element.setAttribute("class", property + " " + dropTargetStyles);
 		} else {
-			element.setAttribute("class", "droptarget");
+			element.setAttribute("class", dropTargetStyles);
 		}
 
 		element.getNode().runWhenAttached(ui -> {
@@ -76,7 +77,7 @@ public class DropTargetExtension<T extends Component> {
 		return Optional.of("e => {" +
 				"if(e.target.classList.contains('droptarget')) {" +
 				"   e.preventDefault(); " +
-				"   e.target.classList.remove('" + String.join("','", createDragOverTargetStyleNames()) + "');" +
+				"   e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"   var draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));" +
 				"   e.target.appendChild(draggedElement);" +
 				"   }" +
@@ -104,7 +105,7 @@ public class DropTargetExtension<T extends Component> {
 	protected Optional<String> createClientSideDragEnterEventListener() {
 		return Optional.of("e => {" +
 				"if(e.target.classList.contains('droptarget')) {" +
-				"e.target.classList.add('" + String.join("','", createDragOverTargetStyleNames()) + "');" +
+				"e.target.classList.add('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"}" +
 				"}");
 	}
@@ -117,7 +118,7 @@ public class DropTargetExtension<T extends Component> {
 	protected Optional<String> createClientSideDragLeaveEventListener() {
 		return Optional.of("e => {" +
 				"if(e.target.classList.contains('droptarget')) {" +
-				"e.target.classList.remove('" + String.join("','", createDragOverTargetStyleNames()) + "');" +
+				"e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"}" +
 				"}");
 	}
@@ -167,8 +168,12 @@ public class DropTargetExtension<T extends Component> {
 		return () -> dragLeaveListeners.remove(listener);
 	}
 
-	protected String[] createDragOverTargetStyleNames() {
-		return new String[]{"dragover", getComponent().getElement().getTag() + "-dragover", getComponent().getId() + "-dragover"};
+	protected String[] createDragOverStyleNames() {
+		return new String[]{"dragover", getComponent().getElement().getTag() + "-dragover"};
+	}
+
+	protected String[] createDropTargetStyleNames() {
+		return new String[]{"droptarget", getComponent().getElement().getTag() + "-droptarget"};
 	}
 
 	public T getComponent() {
