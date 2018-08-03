@@ -29,18 +29,34 @@ public class DragAndDropView extends VerticalLayout {
 		extend1.addDragStartListener(event -> System.out.println("drag start for 1"));
 		extend2.addDragStartListener(event -> System.out.println("drag start for 2"));
 
-		VerticalLayout outerDrop = new VerticalLayout();
+		VerticalLayout dropTarget = new VerticalLayout();
 
-		DropTargetExtension<VerticalLayout> outerDropExtend = DropTargetExtension.extend(outerDrop);
-		outerDropExtend.addDragEnterListener(event -> System.out.println(event.getComponent() + " enter " + outerDropExtend));
-		outerDropExtend.addDropListener(event -> System.out.println(event.getComponent() + " drops on " + outerDropExtend));
+		DropTargetExtension<VerticalLayout> dropTargetExtension = DropTargetExtension.extend(dropTarget);
+		dropTargetExtension.addDragEnterListener(event -> System.out.println(event.getComponent() + " enter " + dropTargetExtension));
+		dropTargetExtension.addDragOverListener(event -> System.out.println(event.getComponent() + " overflies " + dropTargetExtension));
+		dropTargetExtension.addDragLeaveListener(event -> System.out.println(event.getComponent() + " leaves " + dropTargetExtension));
+		dropTargetExtension.addDropListener(event -> System.out.println(event.getComponent() + " drops on " + dropTargetExtension));
 
 		d1.getStyle().set("border", "1px solid gray");
 		d2.getStyle().set("border", "1px solid gray");
-		outerDrop.getStyle().set("border", "1px solid black");
-		outerDrop.setHeight("500px");
-		outerDrop.setWidth("500px");
-		add(d1, d2, outerDrop);
+		dropTarget.getStyle().set("border", "1px solid black");
+		dropTarget.setHeight("500px");
+		dropTarget.setWidth("500px");
+		add(d1, d2, dropTarget);
+
+		VerticalLayout innerDropTarget = new VerticalLayout();
+
+		DropTargetExtension<VerticalLayout> innerDropTargetExtension = DropTargetExtension.extend(innerDropTarget);
+		innerDropTargetExtension.addDragEnterListener(event -> System.out.println(event.getComponent() + " enter inner " + innerDropTargetExtension));
+		innerDropTargetExtension.addDragOverListener(event -> System.out.println(event.getComponent() + " overflies inner " + innerDropTargetExtension));
+		innerDropTargetExtension.addDragLeaveListener(event -> System.out.println(event.getComponent() + " leaves inner " + innerDropTargetExtension));
+		innerDropTargetExtension.addDropListener(event -> System.out.println(event.getComponent() + " drops on inner " + innerDropTargetExtension));
+
+		innerDropTarget.getStyle().set("border", "1px dotted black");
+		innerDropTarget.setHeight("300px");
+		innerDropTarget.setWidth("300px");
+
+		dropTarget.add(innerDropTarget);
 
 		setClassName("main-layout");
 	}
