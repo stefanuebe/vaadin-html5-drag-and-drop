@@ -16,6 +16,7 @@ import java.util.UUID;
  * @param <T> component type
  */
 public class DragSourceExtension<T extends Component> {
+	private final T component;
 	private LinkedHashSet<DragListener<T>> dragListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragStartListener<T>> dragStartListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragEndListener<T>> dragEndListeners = new LinkedHashSet<>();
@@ -27,7 +28,8 @@ public class DragSourceExtension<T extends Component> {
 	 * @param component component to be set draggable
 	 */
 	public DragSourceExtension(T component) {
-		if (!component.getId().isPresent()) {
+		this.component = component;
+		if (!this.component.getId().isPresent()) {
 			component.setId(UUID.randomUUID().toString());
 		}
 
@@ -57,12 +59,27 @@ public class DragSourceExtension<T extends Component> {
 	}
 
 	/**
+	 * Returns the dragged component.
+	 *
+	 * @return component
+	 */
+	public T getComponent() {
+		return component;
+	}
+
+	protected String[] createDraggedStyleNames() {
+		return new String[]{"dragged", getComponent().getElement().getTag() + "-dragged", getComponent().getId() + "-dragged"};
+	}
+
+
+	/**
 	 * Creates the client side event listener for the "dragstart" event.
 	 *
 	 * @return client side event listener for "dragstart"
 	 */
 	protected Optional<String> createClientSideDragStartEventListener() {
 		return Optional.of("e => {" +
+				"e.target.classList.add('" + String.join("','", createDraggedStyleNames()) + "');" +
 				"e.dataTransfer.effectAllowed = 'move';" +
 				"e.dataTransfer.setData('text/plain', e.target.id);" +
 				"}");
@@ -83,7 +100,10 @@ public class DragSourceExtension<T extends Component> {
 	 * @return client side event listener for "dragend"
 	 */
 	protected Optional<String> createClientSideDragEndEventListener() {
-		return Optional.of("e => {e.dataTransfer.setData('text/plain', null);}");
+		return Optional.of("e => {" +
+				"e.target.classList.remove('" + String.join("','", createDraggedStyleNames()) + "');" +
+				"e.dataTransfer.setData('text/plain', null);" +
+				"}");
 	}
 
 	/**
