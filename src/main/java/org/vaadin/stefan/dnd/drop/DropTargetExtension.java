@@ -23,7 +23,7 @@ public class DropTargetExtension<T extends Component> {
 		element.getNode().runWhenAttached(ui -> {
 			Page page = ui.getPage();
 			page.executeJavaScript("$0.addEventListener('dragover', e => e.preventDefault())", component);
-			page.executeJavaScript("$0.addEventListener('drop', e => {e.preventDefault(); e.target.appendChild(document.getElementById(e.dataTransfer.getData('data')))})", component);
+			page.executeJavaScript("$0.addEventListener('drop', e => {e.preventDefault(); e.target.appendChild(document.getElementById(e.dataTransfer.getData('text/plain')))})", component);
 		});
 
 		component.getElement().addEventListener("drop", x -> dropListeners.forEach(l -> l.onDrop(new DropEvent<>(component))));
