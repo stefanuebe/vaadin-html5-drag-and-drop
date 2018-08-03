@@ -9,11 +9,23 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * This class enables HTML5 dragging for a specific Vaadin component. It also registers all needed client side
+ * event listeners and will inform server side event listeners about drag source related events.
+ *
+ * @param <T> component type
+ */
 public class DragSourceExtension<T extends Component> {
 	private LinkedHashSet<DragListener<T>> dragListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragStartListener<T>> dragStartListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragEndListener<T>> dragEndListeners = new LinkedHashSet<>();
 
+	/**
+	 * Enables HTML5 dragging for the given component. It also registers all needed client side
+	 * event listeners and will inform server side event listeners about drag source related events.
+	 *
+	 * @param component component to be set draggable
+	 */
 	public DragSourceExtension(T component) {
 		if (!component.getId().isPresent()) {
 			component.setId(UUID.randomUUID().toString());
@@ -33,10 +45,22 @@ public class DragSourceExtension<T extends Component> {
 		element.addEventListener("dragend", x -> dragEndListeners.forEach(l -> l.onDragEnd(new DragEndEvent<>(component))));
 	}
 
+	/**
+	 * Enables HTML5 dragging for the given component. It also registers all needed client side
+	 * event listeners and will inform server side event listeners about drag source related events.
+	 *
+	 * @param component component to be set draggable
+	 * @return extension instance
+	 */
 	public static <T extends Component> DragSourceExtension<T> extend(T component) {
 		return new DragSourceExtension<>(component);
 	}
 
+	/**
+	 * Creates the client side event listener for the "dragstart" event.
+	 *
+	 * @return client side event listener for "dragstart"
+	 */
 	protected Optional<String> createClientSideDragStartEventListener() {
 		return Optional.of("e => {" +
 				"e.dataTransfer.effectAllowed = 'move';" +
@@ -44,24 +68,53 @@ public class DragSourceExtension<T extends Component> {
 				"}");
 	}
 
+	/**
+	 * Creates the client side event listener for the "drag" event.
+	 *
+	 * @return client side event listener for "drag"
+	 */
 	protected Optional<String> createClientSideDragEventListener() {
 		return Optional.empty();
 	}
 
+	/**
+	 * Creates the client side event listener for the "dragend" event.
+	 *
+	 * @return client side event listener for "dragend"
+	 */
 	protected Optional<String> createClientSideDragEndEventListener() {
 		return Optional.of("e => {e.dataTransfer.setData('text/plain', null);}");
 	}
 
+	/**
+	 * Registers a server side listener that will be informed while the component is dragged around.
+	 *
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDragListener(DragListener<T> listener) {
 		dragListeners.add(listener);
 		return () -> dragListeners.remove(listener);
 	}
 
+	/**
+	 * Registers a server side listener that will be informed when the component drag starts.
+	 *
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDragEndListener(DragEndListener<T> listener) {
 		dragEndListeners.add(listener);
 		return () -> dragEndListeners.remove(listener);
 	}
 
+	/**
+	 * Registers a server side listener that will be informed when the component drag is finished. The component
+	 * might be successfully dropped or not.
+	 *
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDragStartListener(DragStartListener<T> listener) {
 		dragStartListeners.add(listener);
 		return () -> dragStartListeners.remove(listener);

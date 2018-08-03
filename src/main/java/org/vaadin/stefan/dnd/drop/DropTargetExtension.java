@@ -8,13 +8,26 @@ import com.vaadin.flow.shared.Registration;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
-
+/**
+ * This class marks a Vaadin component as a valid HTML5 drop target. The given component's element should be able to
+ * have child elements. It also registers all needed client side event listeners and will inform server side event
+ * listeners about drag source related events.
+ *
+ * @param <T> component type
+ */
 public class DropTargetExtension<T extends Component> {
 	private LinkedHashSet<DropListener<T>> dropListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragEnterListener<T>> dragEnterListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragOverListener<T>> dragOverListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragLeaveListener<T>> dragLeaveListeners = new LinkedHashSet<>();
 
+	/**
+	 * Marks a Vaadin component as a valid HTML5 drop target. The given component's element should be able to
+	 * have child elements. It also registers all needed client side event listeners and will inform server side event
+	 * listeners about drag source related events.
+	 *
+	 * @param component component
+	 */
 	public DropTargetExtension(T component) {
 		Element element = component.getElement();
 
@@ -32,41 +45,90 @@ public class DropTargetExtension<T extends Component> {
 		element.addEventListener("dragleave", x -> dragLeaveListeners.forEach(l -> l.onDragLeave(new DragLeaveEvent<>(component))));
 	}
 
+	/**
+	 * Marks a Vaadin component as a valid HTML5 drop target. The given component's element should be able to
+	 * have child elements. It also registers all needed client side event listeners and will inform server side event
+	 * listeners about drag source related events.
+	 *
+	 * @param component component
+	 * @return extension instance
+	 */
 	public static <T extends Component> DropTargetExtension<T> extend(T component) {
 		return new DropTargetExtension<>(component);
 	}
 
+	/**
+	 * Creates the client side event listener for the "drop" event.
+	 *
+	 * @return client side event listener for "drop"
+	 */
 	protected Optional<String> createClientSideDropEventListener() {
 		return Optional.of("e => {e.preventDefault(); e.target.appendChild(document.getElementById(e.dataTransfer.getData('text/plain')))}");
 	}
 
+	/**
+	 * Creates the client side event listener for the "dragover" event.
+	 *
+	 * @return client side event listener for "dragover"
+	 */
 	protected Optional<String> createClientSideDragOverEventListener() {
 		return Optional.of("e => e.preventDefault()");
 	}
 
+	/**
+	 * Creates the client side event listener for the "dragenter" event.
+	 *
+	 * @return client side event listener for "dragenter"
+	 */
 	protected Optional<String> createClientSideDragEnterEventListener() {
 		return Optional.empty();
 	}
 
+	/**
+	 * Creates the client side event listener for the "dragleave" event.
+	 *
+	 * @return client side event listener for "dragleave"
+	 */
 	protected Optional<String> createClientSideDragLeaveEventListener() {
 		return Optional.empty();
 	}
 
+	/**
+	 * Registers a server side listener that will be informed, whan a draggable will be dropped inside
+	 * this component.
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDropListener(DropListener<T> listener) {
 		dropListeners.add(listener);
 		return () -> dropListeners.remove(listener);
 	}
 
+	/**
+	 * Registers a server side listener that will be informed, when a draggable is moved over the drop area.
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDragOverListener(DragOverListener<T> listener) {
 		dragOverListeners.add(listener);
 		return () -> dragOverListeners.remove(listener);
 	}
 
+	/**
+	 * Registers a server side listener that will be informed, when a dragged component is moved into the drop area.
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDragEnterListener(DragEnterListener<T> listener) {
 		dragEnterListeners.add(listener);
 		return () -> dragEnterListeners.remove(listener);
 	}
 
+	/**
+	 * Registers a server side listener that will be informed, when a dragged component is moved out of the drop area.
+	 * @param listener listener
+	 * @return registration instance to remove the listener
+	 */
 	public Registration addDragLeaveListener(DragLeaveListener<T> listener) {
 		dragLeaveListeners.add(listener);
 		return () -> dragLeaveListeners.remove(listener);
