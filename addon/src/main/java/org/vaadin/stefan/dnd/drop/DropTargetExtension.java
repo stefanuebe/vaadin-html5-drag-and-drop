@@ -34,7 +34,7 @@ public class DropTargetExtension<T extends Component> {
 
 		Element element = component.getElement();
 		String property = element.getAttribute("class");
-		String dropTargetStyles = String.join(" ", createDragOverStyleNames());
+		String dropTargetStyles = String.join(" ", createDropTargetStyleNames());
 		if (property != null) {
 			element.setAttribute("class", property + " " + dropTargetStyles);
 		} else {
@@ -75,7 +75,7 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDropEventListener() {
 		return Optional.of("e => {" +
-				"if(e.target.classList.contains('droptarget')) {" +
+				"if(e.target.classList.contains('droptarget') && e.target.classList.contains('dragover')) {" +
 				"   e.preventDefault(); " +
 				"   e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"   var draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));" +
