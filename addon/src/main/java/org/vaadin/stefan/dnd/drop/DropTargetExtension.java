@@ -76,7 +76,8 @@ public class DropTargetExtension<T extends Component> {
 	protected Optional<String> createClientSideDropEventListener() {
 		return Optional.of("e => {" +
 				"if(e.target.classList.contains('droptarget') && e.target.classList.contains('dragover')) {" +
-				"   e.preventDefault(); " +
+				"   e.preventDefault();" +
+				"   e.stopPropagation(); " +
 				"   e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"   var draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));" +
 				"   e.target.appendChild(draggedElement);" +

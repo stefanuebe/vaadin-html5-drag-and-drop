@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>dnd-demo</artifactId>
+    <name>HTML5 Drag and Drop Extension Demo</name>
+
+    <parent>
+        <groupId>org.vaadin.stefan</groupId>
+        <artifactId>dnd-parent</artifactId>
+        <version>0.0.5</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vaadin.stefan</groupId>
+            <artifactId>dnd</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>false</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Vaadin-Package-Version>1</Vaadin-Package-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.7.v20160115</version>
+                <configuration>
+                    <scanIntervalSeconds>-1</scanIntervalSeconds>
+                    <!-- Use test scope because the UI/demo classes are in 
+                        the test package. -->
+                    <useTestScope>true</useTestScope>
+                    <!--<webAppConfig>-->
+                        <!--&lt;!&ndash; This is only needed to be able to unzip webjars-->
+                            <!--directly into src/test/webjar-debug and modify them for testing &ndash;&gt;-->
+                        <!--<resourceBase>src/test/webjar-debug/META-INF/resources</resourceBase>-->
+                    <!--</webAppConfig>-->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+
