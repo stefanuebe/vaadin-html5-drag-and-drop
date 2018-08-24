@@ -1,5 +1,6 @@
 package org.vaadin.stefan.dnd.demo;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.HtmlImport;
@@ -27,7 +28,7 @@ public class DragAndDropView extends VerticalLayout {
 	private final Checkbox showEvents;
 
 	public DragAndDropView() {
-		DndActivator.activateMobileDnd(this);
+		DndActivator.activateMobileDnd();
 
 		showEvents = new Checkbox("Show events", true);
 		add(showEvents);
@@ -40,6 +41,8 @@ public class DragAndDropView extends VerticalLayout {
 
 		extend1.addDragStartListener(event -> showEventNotification("Event dragstart for 1"));
 		extend2.addDragStartListener(event -> showEventNotification("Event dragstart for 2"));
+		extend1.addDragEndListener(event -> showEventNotification("Event dragend for 1"));
+		extend2.addDragEndListener(event -> showEventNotification("Event dragend for 2"));
 
 		VerticalLayout dropTarget = new VerticalLayout();
 		dropTarget.add(new Span("Outer drop target"));
@@ -63,6 +66,17 @@ public class DragAndDropView extends VerticalLayout {
 
 		dropTarget.add(innerDropTarget);
 
+		VerticalLayout innerInnerDropTarget = new VerticalLayout();
+		innerInnerDropTarget.add(new Span("Inner drop target"));
+		innerInnerDropTarget.addClassName("inner-drop");
+
+		DropTargetExtension<VerticalLayout> innerInnerDropTargetExtension = DropTargetExtension.extend(innerInnerDropTarget);
+		innerInnerDropTargetExtension.addDragEnterListener(event -> showEventNotification("Event dragenter inner inner"));
+		innerInnerDropTargetExtension.addDragLeaveListener(event -> showEventNotification("Event dragleave inner inner"));
+		innerInnerDropTargetExtension.addDropListener(event -> showEventNotification("Event drop inner inner"));
+
+		innerDropTarget.add(innerInnerDropTarget);
+
 		setClassName("main-layout");
 	}
 
@@ -76,6 +90,8 @@ public class DragAndDropView extends VerticalLayout {
 		public TestComponent(int i) {
 			addClassName("drag-source");
 			add(new Span("Dragabble " + i));
+			add(new Button("My Button " + i));
+			add(new TextField("my text field " + i, "Some value", "Some placeholder"));
 		}
 	}
 

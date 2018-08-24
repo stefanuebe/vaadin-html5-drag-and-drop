@@ -7,6 +7,15 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.Page;
 
 public class DndActivator {
+
+	public static final void activateMobileDnd() {
+		UI current = UI.getCurrent();
+		if (current == null) {
+			throw new IllegalStateException("No current UI found!");
+		}
+		activateMobileDnd(current);
+	}
+
 	public static final void activateMobileDnd(HasElement component) {
 		component.getElement().getNode().runWhenAttached(DndActivator::activateMobileDnd);
 	}

@@ -9,8 +9,7 @@
 
         .drag-source {
             border: 1px solid green;
-            width: 100px;
-            height: 50px;
+            background-color: #f3f3f3;
         }
 
         .droptarget {
@@ -29,6 +28,10 @@
         .dragover {
             border: 1px dashed blue;
             background-color: #eff5ff;
+        }
+
+        .dragged * {
+            pointer-events: none;
         }
 
     </style>
