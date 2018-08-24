@@ -19,10 +19,11 @@ public class DndActivator {
 		page.executeJavaScript("var polyfillApplied = MobileDragDrop.polyfill({" +
 				"            dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride" +
 				"});" +
-				"window.addEventListener( 'touchmove', function() {});" +
+				"" +
+				"document.addEventListener('touchmove', e => e.preventDefault(), {passive:false});"/* +
 				"if (polyfillApplied) {" +
 				"   alert('polyfill applied');" +
-				"}");
+				"}"*/);
 
 
 	}
