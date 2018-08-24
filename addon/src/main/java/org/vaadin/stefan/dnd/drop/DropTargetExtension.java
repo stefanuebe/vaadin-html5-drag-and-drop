@@ -105,6 +105,7 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragEnterEventListener() {
 		return Optional.of("e => {" +
+				"e.preventDefault();" +
 				"if(e.target.classList.contains('droptarget')) {" +
 				"e.target.classList.add('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"}" +
@@ -118,6 +119,7 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragLeaveEventListener() {
 		return Optional.of("e => {" +
+				"e.preventDefault();" +
 				"if(e.target.classList.contains('droptarget')) {" +
 				"e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"}" +

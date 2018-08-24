@@ -17,8 +17,9 @@ public class DndActivator {
 		page.addJavaScript("frontend://bower_components/mobile-drag-drop/release/scroll-behaviour.min.js");
 
 		page.executeJavaScript("var polyfillApplied = MobileDragDrop.polyfill({" +
-				"            dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride," +
+				"            dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride" +
 				"});" +
+				"window.addEventListener( 'touchmove', function() {});" +
 				"if (polyfillApplied) {" +
 				"   alert('polyfill applied');" +
 				"}");
