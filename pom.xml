@@ -5,7 +5,7 @@
 
     <groupId>org.vaadin.stefan</groupId>
     <artifactId>dnd-parent</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6-SNAPSHOT</version>
     <name>HTML5 Drag and Drop Extension Parent</name>
 
     <packaging>pom</packaging>
