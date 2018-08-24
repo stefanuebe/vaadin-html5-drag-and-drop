@@ -3,13 +3,14 @@
 This addon allows the activation of HTML5 drag and drop functionality for Vaadin 10 components. 
 It is activated via Java and provides several listeners to handle dnd events server side.
 
-This is the first early (and also experimental) version of the addon. 
-
 ## Development instructions
 
 The activation of the dnd feature orientates on the Java 8 API by "extending" a given component.
 
 ```
+// Activate DnD support for mobile devices (like iOS). Activates Polyfill support.
+DndActivator.activateMobileDnd(this);
+
 // Defining a draggable component and its extension.
 TestComponent componentToDrag = new TestComponent(1);
 
@@ -43,4 +44,4 @@ Other class names might be added by yourself as needed.
 ## Todos
 
 - extending events to provide additional client side information like Mouse events, drop target, etc.
-- disableing dragging, when click and hold a inner component of the draggable component (e.g.so that you might still mark text)
+- disabling dragging, when click and hold a inner component of the draggable component (e.g.so that you might still mark text)
