@@ -5,13 +5,13 @@
 
     <groupId>org.vaadin.stefan</groupId>
     <artifactId>dnd-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <name>HTML5 Drag and Drop Extension Parent</name>
 
     <packaging>pom</packaging>
 
     <properties>
-        <vaadin.version>10.0.4</vaadin.version>
+        <vaadin.version>10.0.6</vaadin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

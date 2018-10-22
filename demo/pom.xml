@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.vaadin.stefan</groupId>
         <artifactId>dnd-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.3</version>
     </parent>
 
     <dependencies>
@@ -136,6 +136,20 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <!--<configuration>-->
+                            <!--<bundle>true</bundle>-->
+                            <!--<fragments>-->
+                                <!--<fragment>-->
+                                    <!--<name>mobile-dnd</name>-->
+                                    <!--<files>-->
+                                        <!--<file>bower_components/mobile-drag-drop/release/default.css</file>-->
+                                        <!--<file>bower_components/mobile-drag-drop/release/index.min.js</file>-->
+                                        <!--<file>bower_components/mobile-drag-drop/release/scroll-behaviour.min.js</file>-->
+                                    <!--</files>-->
+                                <!--</fragment>-->
+                            <!--</fragments>-->
+                        <!--</configuration>-->
+
                     </plugin>
                 </plugins>
             </build>
