@@ -75,11 +75,12 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDropEventListener() {
 		return Optional.of("e => {" +
-				"if(e.target.classList.contains('droptarget') && e.target.classList.contains('dragover')) {" +
+				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget') && e.target.classList.contains('dragover')) {" +
 				"   e.preventDefault();" +
 				"   e.stopPropagation(); " +
 				"   e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"   var draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));" +
+				"	console.log('MYTARGET: ' + e.target.tagName);" +
 				"   e.target.appendChild(draggedElement);" +
 				"   }" +
 				"}");
@@ -92,7 +93,7 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragOverEventListener() {
 		return Optional.of("e => {" +
-				"if(e.target.classList.contains('droptarget')) {" +
+				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget')) {" +
 				"       e.preventDefault();" +
 				"   }" +
 				"}");
@@ -106,8 +107,8 @@ public class DropTargetExtension<T extends Component> {
 	protected Optional<String> createClientSideDragEnterEventListener() {
 		return Optional.of("e => {" +
 				"e.preventDefault();" +
-				"if(e.target.classList.contains('droptarget')) {" +
-				"e.target.classList.add('" + String.join("','", createDragOverStyleNames()) + "');" +
+				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget')) {" +
+				"	e.target.classList.add('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"}" +
 				"}");
 	}
@@ -120,8 +121,8 @@ public class DropTargetExtension<T extends Component> {
 	protected Optional<String> createClientSideDragLeaveEventListener() {
 		return Optional.of("e => {" +
 				"e.preventDefault();" +
-				"if(e.target.classList.contains('droptarget')) {" +
-				"e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
+				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget')) {" +
+				"	e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"}" +
 				"}");
 	}

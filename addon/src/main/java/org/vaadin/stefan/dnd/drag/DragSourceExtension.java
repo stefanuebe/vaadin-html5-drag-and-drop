@@ -79,9 +79,12 @@ public class DragSourceExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragStartEventListener() {
 		return Optional.of("e => {" +
-				"e.target.classList.add('" + String.join("','", createDraggedStyleNames()) + "');" +
-				"e.dataTransfer.effectAllowed = 'move';" +
-				"e.dataTransfer.setData('text/plain', e.target.id);" +
+				"if(typeof e.target.classList !== 'undefined') {" +
+				"	e.target.classList.add('" + String.join("','", createDraggedStyleNames()) + "');" +
+				"	e.dataTransfer.clearData();" +
+				"	e.dataTransfer.effectAllowed = 'move';" +
+				"	e.dataTransfer.setData('text/plain', e.target.id);" +
+				"	}" +
 				"}");
 	}
 
@@ -101,8 +104,10 @@ public class DragSourceExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragEndEventListener() {
 		return Optional.of("e => {" +
-				"e.target.classList.remove('" + String.join("','", createDraggedStyleNames()) + "');" +
-				"e.dataTransfer.setData('text/plain', null);" +
+				"if(typeof e.target.classList !== 'undefined') {" +
+				"	e.target.classList.remove('" + String.join("','", createDraggedStyleNames()) + "');" +
+				"	e.dataTransfer.setData('text/plain', null);" +
+				"	}" +
 				"}");
 	}
 

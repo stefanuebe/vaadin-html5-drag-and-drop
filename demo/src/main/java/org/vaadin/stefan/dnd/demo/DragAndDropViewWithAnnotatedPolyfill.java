@@ -93,8 +93,8 @@ public class DragAndDropViewWithAnnotatedPolyfill extends VerticalLayout {
 		public DragTestComponent(int i) {
 			addClassName("drag-source");
 			add(new Span("Dragabble " + i));
-			add(new Button("My Button " + i));
-			add(new TextField("my text field " + i, "Some value", "Some placeholder"));
+//			add(new Button("My Button " + i));
+//			add(new TextField("my text field " + i, "Some value", "Some placeholder"));
 		}
 	}
 
