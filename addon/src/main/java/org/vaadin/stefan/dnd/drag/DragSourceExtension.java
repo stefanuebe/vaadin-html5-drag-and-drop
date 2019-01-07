@@ -79,6 +79,7 @@ public class DragSourceExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragStartEventListener() {
 		return Optional.of("e => {" +
+				"e.stopPropagation(); " +
 				"if(typeof e.target.classList !== 'undefined') {" +
 				"	e.target.classList.add('" + String.join("','", createDraggedStyleNames()) + "');" +
 				"	e.dataTransfer.clearData();" +
@@ -104,6 +105,7 @@ public class DragSourceExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragEndEventListener() {
 		return Optional.of("e => {" +
+				"e.stopPropagation(); " +
 				"if(typeof e.target.classList !== 'undefined') {" +
 				"	e.target.classList.remove('" + String.join("','", createDraggedStyleNames()) + "');" +
 				"	e.dataTransfer.setData('text/plain', null);" +

@@ -75,12 +75,11 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDropEventListener() {
 		return Optional.of("e => {" +
+				"e.stopPropagation(); " +
+				"e.preventDefault();" +
 				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget') && e.target.classList.contains('dragover')) {" +
-				"   e.preventDefault();" +
-				"   e.stopPropagation(); " +
 				"   e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
 				"   var draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));" +
-				"	console.log('MYTARGET: ' + e.target.tagName);" +
 				"   e.target.appendChild(draggedElement);" +
 				"   }" +
 				"}");
@@ -93,9 +92,8 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragOverEventListener() {
 		return Optional.of("e => {" +
-				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget')) {" +
-				"       e.preventDefault();" +
-				"   }" +
+				"e.stopPropagation(); " +
+				"e.preventDefault();" +
 				"}");
 	}
 
@@ -106,6 +104,7 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragEnterEventListener() {
 		return Optional.of("e => {" +
+				"e.stopPropagation(); " +
 				"e.preventDefault();" +
 				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget')) {" +
 				"	e.target.classList.add('" + String.join("','", createDragOverStyleNames()) + "');" +
@@ -120,6 +119,7 @@ public class DropTargetExtension<T extends Component> {
 	 */
 	protected Optional<String> createClientSideDragLeaveEventListener() {
 		return Optional.of("e => {" +
+				"e.stopPropagation(); " +
 				"e.preventDefault();" +
 				"if(typeof e.target.classList !== 'undefined' && e.target.classList.contains('droptarget')) {" +
 				"	e.target.classList.remove('" + String.join("','", createDragOverStyleNames()) + "');" +
