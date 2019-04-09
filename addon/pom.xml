@@ -5,7 +5,7 @@
 
     <groupId>org.vaadin.stefan</groupId>
     <artifactId>dnd</artifactId>
-    <version>1.0.4</version>
+    <version>1.1.0</version>
 
     <name>HTML5 Drag and Drop Extension</name>
     <description>Java based integration of HTML5 drag and drop functionality for Vaadin 10 components</description>
@@ -60,6 +60,12 @@
             <groupId>org.webjars.bowergithub.timruffles</groupId>
             <artifactId>mobile-drag-drop</artifactId>
             <version>2.3.0-rc.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

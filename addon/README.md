@@ -23,9 +23,9 @@ dragSource.addDragEndListener(event -> System.out.println("drag end for 2" + eve
 //dragSource.addDragListener(event -> System.out.println("drag for " + event.getComponent()));
 
 // Defining the drop target and its extension
-VerticalLayout dropTarget = new VerticalLayout();
+VerticalLayout component = new VerticalLayout();
 
-DropTargetExtension<VerticalLayout> dropTargetExtension = DropTargetExtension.extend(dropTarget);
+DropTargetExtension<VerticalLayout> dropTargetExtension = DropTargetExtension.extend(component);
 dropTargetExtension.addDragEnterListener(event -> System.out.println(event.getComponent() + " enter " + dropTargetExtension));
 dropTargetExtension.addDragOverListener(event -> System.out.println(event.getComponent() + " overflies " + dropTargetExtension));
 dropTargetExtension.addDragLeaveListener(event -> System.out.println(event.getComponent() + " leaves " + dropTargetExtension));
@@ -34,10 +34,10 @@ dropTargetExtension.addDropListener(event -> System.out.println(event.getCompone
 
 ## Styling
 
-Dragged elements css classes are extended with a `dragged` class name, that can be used for styling the source element, when the dragging start. Also there will be a element tag specific class like `div-dragged` if the draggable is a Div element.
+Dragged elements css classes are extended with a `dragSource` class name, that can be used for styling the source element, when the dragging start. Also there will be a element tag specific class like `div-dragSource` if the draggable is a Div element.
 These classes are removed as soon, as the dragging stops.
 
-For the drop target there will be the permanent classes `droptarget` and element-tagname + `-droptarget` (like `droptarget div-droptarget`). As soon as a dragged element enters the drop area, the classes `dragover` and element-tag + `-dragover` will be added to the drop target.
+For the drop target there will be the permanent classes `droptarget` and element-tagname + `-droptarget` (like `droptarget div-droptarget`). As soon as a dragSource element enters the drop area, the classes `dragover` and element-tag + `-dragover` will be added to the drop target.
 
 Other class names might be added by yourself as needed.
 

@@ -17,6 +17,7 @@ import java.util.UUID;
  */
 public class DragSourceExtension<T extends Component> {
 	private final T component;
+	private Object dragData;
 	private LinkedHashSet<DragListener<T>> dragListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragStartListener<T>> dragStartListeners = new LinkedHashSet<>();
 	private LinkedHashSet<DragEndListener<T>> dragEndListeners = new LinkedHashSet<>();
@@ -37,14 +38,27 @@ public class DragSourceExtension<T extends Component> {
 		element.setProperty("draggable", true);
 		element.getNode().runWhenAttached(ui -> {
 			Page page = ui.getPage();
+
 			createClientSideDragStartEventListener().ifPresent(s -> page.executeJavaScript("$0.addEventListener('dragstart', " + s + ")", component));
 			createClientSideDragEventListener().ifPresent(s -> page.executeJavaScript("$0.addEventListener('drag', " + s + ")", component));
 			createClientSideDragEndEventListener().ifPresent(s -> page.executeJavaScript("$0.addEventListener('dragend', " + s + ")", component));
+
+//			not sure if this is needed, dragend should be called automatically and remove the value
+//			ui.addDetachListener(event -> ui.getSession().setAttribute("current_dragged_" + ui.hashCode(), null));
+//			ui.addBeforeLeaveListener(event -> ui.getSession().setAttribute("current_dragged_" + ui.hashCode(), null));
 		});
 
-		element.addEventListener("dragstart", x -> dragStartListeners.forEach(l -> l.onDragStart(new DragStartEvent<>(component))));
+		element.addEventListener("dragstart", x -> component.getUI().ifPresent(ui -> {
+			ui.getSession().setAttribute("current_dragged_" + ui.hashCode(), this);
+			dragStartListeners.forEach(l -> l.onDragStart(new DragStartEvent<>(component)));
+		}));
+
 		element.addEventListener("drag", x -> dragListeners.forEach(l -> l.onDrag(new DragEvent<>(component))));
-		element.addEventListener("dragend", x -> dragEndListeners.forEach(l -> l.onDragEnd(new DragEndEvent<>(component))));
+
+		element.addEventListener("dragend", x -> component.getUI().ifPresent(ui -> {
+			dragEndListeners.forEach(l -> l.onDragEnd(new DragEndEvent<>(component)));
+			ui.getSession().setAttribute("current_dragged_" + ui.hashCode(), null);
+		}));
 	}
 
 	/**
@@ -84,7 +98,6 @@ public class DragSourceExtension<T extends Component> {
 				"	e.target.classList.add('" + String.join("','", createDraggedStyleNames()) + "');" +
 				"	e.dataTransfer.clearData();" +
 				"	e.dataTransfer.effectAllowed = 'move';" +
-				"	e.dataTransfer.setData('text/plain', e.target.id);" +
 				"	}" +
 				"}");
 	}
@@ -108,7 +121,6 @@ public class DragSourceExtension<T extends Component> {
 				"e.stopPropagation(); " +
 				"if(typeof e.target.classList !== 'undefined') {" +
 				"	e.target.classList.remove('" + String.join("','", createDraggedStyleNames()) + "');" +
-				"	e.dataTransfer.setData('text/plain', null);" +
 				"	}" +
 				"}");
 	}
@@ -147,5 +159,22 @@ public class DragSourceExtension<T extends Component> {
 		return () -> dragStartListeners.remove(listener);
 	}
 
+	/**
+	 * Gets optional set drag data. Might be empty. This is not the client side drag data, but server side only, manual
+	 * set data.
+	 * @return drag data
+	 */
+	public Optional<Object> getDragData() {
+		return Optional.ofNullable(dragData);
+	}
 
+	/**
+	 * Sets the drag data to be used for this drag source. Might be null to clear the current data.
+	 * <p/>
+	 * The given object is only used on server side and does not affect the client side HTML 5 drag data.
+	 * @param dragData drag data
+	 */
+	public void setDragData(Object dragData) {
+		this.dragData = dragData;
+	}
 }
